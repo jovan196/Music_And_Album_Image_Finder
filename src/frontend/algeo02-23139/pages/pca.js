@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import ImageCard from './components/ImageCard';
 
 export default function Home() {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -37,40 +38,57 @@ export default function Home() {
   };
 
   return (
-    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <h1>Find Similar Images</h1>
-      <input type="file" onChange={handleFileChange} />
-      <button onClick={handleUpload} disabled={isLoading}>
-        {isLoading ? 'Uploading...' : 'Upload'}
-      </button>
-
-      {uploadedImageUrl && (
-        <div style={{ marginTop: '20px' }}>
-          <h2>Uploaded Image:</h2>
-          <img
-            src={uploadedImageUrl}
-            alt="Uploaded"
-            style={{ width: '200px', height: '200px', objectFit: 'cover' }}
+    <div className="min-h-screen bg-gray-100 p-6">
+      <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-8">
+        <h1 className="text-3xl font-bold text-gray-800 text-center mb-8">
+          Find Similar Images
+        </h1>
+        <div className="flex flex-col items-center mb-8">
+          <input
+            type="file"
+            onChange={handleFileChange}
+            className="mb-4 w-full text-sm text-gray-500 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200"
           />
+          <button
+            onClick={handleUpload}
+            disabled={isLoading}
+            className={`w-full max-w-md py-2 px-4 rounded-md text-white font-semibold ${
+              isLoading
+                ? 'bg-gray-400 cursor-not-allowed'
+                : 'bg-blue-600 hover:bg-blue-700'
+            }`}
+          >
+            {isLoading ? 'Uploading...' : 'Upload'}
+          </button>
         </div>
-      )}
-
-      <div style={{ marginTop: '20px' }}>
-        <h2>Similar Images:</h2>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-          {Array.isArray(similarImages) && similarImages.length > 0 ? (
-            similarImages.map((image, index) => (
-              <div key={index} style={{ textAlign: 'center' }}>
-                <img
-                  src={image.url}
-                  alt={`Similar image ${index + 1}`}
-                  style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+        {uploadedImageUrl && (
+          <div className="mb-6 text-center">
+            <h2 className="text-xl font-semibold mb-2">Uploaded Image:</h2>
+            <img
+              src={uploadedImageUrl}
+              alt="Uploaded"
+              className="w-64 h-64 object-cover mx-auto rounded-lg shadow-md"
+            />
+          </div>
+        )}
+        <div>
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4 text-center">
+            Similar Images
+          </h2>
+          {similarImages.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {similarImages.map((image, index) => (
+                <ImageCard
+                  key={index}
+                  image={image.url}
+                  distance={image.distance}
                 />
-                <p>Distance: {image.distance.toFixed(2)}</p>
-              </div>
-            ))
+              ))}
+            </div>
           ) : (
-            <p>No similar images found.</p>
+            uploadedImageUrl && (
+              <p className="text-center text-gray-600">No similar images found.</p>
+            )
           )}
         </div>
       </div>
