@@ -8,6 +8,7 @@ interface SimilarImage {
 
 export default function Home() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedZip, setSelectedZip] = useState<File | null>(null);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string>("");
   const [similarImages, setSimilarImages] = useState<SimilarImage[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -17,6 +18,13 @@ export default function Home() {
     if (file) {
       setSelectedFile(file);
       setUploadedImageUrl(URL.createObjectURL(file));
+    }
+  };
+
+  const handleZipChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedZip(file);
     }
   };
 
@@ -47,6 +55,30 @@ export default function Home() {
     }
   };
 
+  const handleZipUpload = async () => {
+    if (!selectedZip) {
+      alert("Please select a zip file first!");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("zip", selectedZip);
+
+    try {
+      setIsLoading(true);
+      await axios.post("http://127.0.0.1:5000/upload-zip", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      alert("Zip file uploaded and processed successfully!");
+    } catch (error) {
+      console.error("Error uploading zip file:", (error as Error).message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-blue-50">
       <header className="bg-white shadow">
@@ -63,12 +95,12 @@ export default function Home() {
             <div className="flex flex-col items-center">
               <div className="w-full max-w-md space-y-6">
                 <div className="mb-4">
-                    <label
+                  <label
                     htmlFor="file-upload"
                     className="block text-2xl font-extrabold text-gray-700 text-center"
-                    >
+                  >
                     Unggah Gambar
-                    </label>
+                  </label>
                   <input
                     id="file-upload"
                     type="file"
@@ -101,6 +133,39 @@ export default function Home() {
                   }`}
                 >
                   {isLoading ? "Mengupload..." : "Cari Gambar Mirip"}
+                </button>
+              </div>
+              <div className="w-full max-w-md space-y-6 mt-8">
+                <div className="mb-4">
+                  <label
+                    htmlFor="zip-upload"
+                    className="block text-2xl font-extrabold text-gray-700 text-center"
+                  >
+                    Unggah Kumpulan Gambar (Zip)
+                  </label>
+                  <input
+                    id="zip-upload"
+                    type="file"
+                    onChange={handleZipChange}
+                    className="block w-full text-sm text-gray-500 mt-2 
+                      file:mr-4 file:py-2 file:px-4
+                      file:rounded-full file:border
+                      file:border-gray-300
+                      file:text-sm file:font-medium
+                      file:bg-blue-100 file:text-blue-700
+                      hover:file:bg-blue-200 focus:outline-none"
+                  />
+                </div>
+                <button
+                  onClick={handleZipUpload}
+                  disabled={isLoading}
+                  className={`w-full py-3 px-4 rounded-lg text-white font-bold shadow-lg transform transition-transform ${
+                    isLoading
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-blue-600 hover:bg-blue-700 hover:scale-105"
+                  }`}
+                >
+                  {isLoading ? "Mengupload..." : "Unggah Kumpulan Gambar"}
                 </button>
               </div>
             </div>

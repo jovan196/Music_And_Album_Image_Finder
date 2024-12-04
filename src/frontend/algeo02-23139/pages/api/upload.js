@@ -42,6 +42,32 @@ apiRoute.post(async (req, res) => {
   }
 });
 
+apiRoute.use(upload.single('zip')); // Use multer middleware for zip files
+
+apiRoute.post('/upload-zip', async (req, res) => {
+  const pythonBackendUrl = 'http://127.0.0.1:5000/upload-zip'; // Replace with your Python backend URL
+  const filePath = req.file.path;
+
+  try {
+    // Send the uploaded zip file to the Python backend
+    const formData = new FormData();
+    formData.append('zip', fs.createReadStream(filePath));
+
+    await axios.post(pythonBackendUrl, formData, {
+      headers: formData.getHeaders(),
+    });
+
+    // Clean up the uploaded file
+    fs.unlinkSync(filePath);
+
+    // Send success response to the client
+    res.status(200).json({ message: 'Zip file uploaded and processed successfully' });
+  } catch (error) {
+    console.error('Error communicating with Python backend:', error.message);
+    res.status(500).json({ error: 'Error communicating with backend' });
+  }
+});
+
 export default apiRoute;
 
 export const config = {

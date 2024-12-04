@@ -4,6 +4,7 @@ from PIL import Image
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import logging
+import zipfile
 
 logging.basicConfig(level=logging.INFO)
 
@@ -21,6 +22,8 @@ def ensure_dir(path):
     if not os.path.exists(path):
         os.mkdir(path)
 
+# Ensure directories exist
+ensure_dir(DATABASE_PATH)
 ensure_dir(UPLOADS_PATH)
 ensure_dir(PROCESSED_DATA_PATH)
 
@@ -107,6 +110,30 @@ def find_similar_images():
         "total_results": len(database_paths),
         "similar_images": similar_images
     })
+
+@app.route('/upload-zip', methods=['POST'])
+def upload_zip():
+    uploaded_file = request.files['zip']
+    zip_path = os.path.join(UPLOADS_PATH, uploaded_file.filename)
+    uploaded_file.save(zip_path)
+
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        zip_ref.extractall(DATABASE_PATH)
+    os.remove(zip_path)
+
+    # Preprocess images and compute PCA
+    database_images, database_labels, database_paths = preprocess_images_from_directory(DATABASE_PATH)
+    database_features, data_mean, eigenvectors = compute_pca(database_images, NUM_PCA_COMPONENTS)
+    np.savez_compressed(
+        f"{PROCESSED_DATA_PATH}/database_pca.npz",
+        features=database_features,
+        labels=database_labels,
+        paths=database_paths,
+        mean=data_mean,
+        eigenvectors=eigenvectors
+    )
+
+    return jsonify({"message": "Files extracted successfully"})
 
 @app.route('/images/<path:filename>')
 def serve_image(filename):
