@@ -8,14 +8,17 @@ import zipfile
 
 logging.basicConfig(level=logging.INFO)
 
+global database_images, database_labels, database_paths
+global database_features, data_mean, eigenvectors
+
 app = Flask(__name__)
 CORS(app)
 
 DATABASE_PATH = "./images"
 PROCESSED_DATA_PATH = "./processed"
 UPLOADS_PATH = "./uploads"
-IMAGE_SIZE = (100, 100)  # Resize all images to a fixed size
-NUM_PCA_COMPONENTS = 50  # Number of PCA components
+IMAGE_SIZE = (128, 128)  # Resize all images to a larger fixed size for better feature extraction
+NUM_PCA_COMPONENTS = 100  # Increase the number of PCA components for better accuracy
 
 # Helper function: ensure directory exists
 def ensure_dir(path):
@@ -51,16 +54,11 @@ def compute_pca(X, num_components):
     X_reduced = np.dot(X_centered, principal_components)
     return X_reduced, X_mean, principal_components
 
-# Load or preprocess database
-if os.path.exists(f"{PROCESSED_DATA_PATH}/database_pca.npz"):
-    logging.info("Loading preprocessed PCA data...")
-    data = np.load(f"{PROCESSED_DATA_PATH}/database_pca.npz")
-    database_features = data['features']
-    database_labels = data['labels']
-    database_paths = data['paths']
-    data_mean = data['mean']
-    eigenvectors = data['eigenvectors']
-else:
+# Function to update PCA database
+def update_pca_database():
+    global database_images, database_labels, database_paths
+    global database_features, data_mean, eigenvectors
+
     logging.info("Preprocessing images and computing PCA...")
     database_images, database_labels, database_paths = preprocess_images_from_directory(DATABASE_PATH)
     database_features, data_mean, eigenvectors = compute_pca(database_images, NUM_PCA_COMPONENTS)
@@ -72,6 +70,18 @@ else:
         mean=data_mean,
         eigenvectors=eigenvectors
     )
+
+# Load or preprocess database
+if os.path.exists(f"{PROCESSED_DATA_PATH}/database_pca.npz"):
+    logging.info("Loading preprocessed PCA data...")
+    data = np.load(f"{PROCESSED_DATA_PATH}/database_pca.npz")
+    database_features = data['features']
+    database_labels = data['labels']
+    database_paths = data['paths']
+    data_mean = data['mean']
+    eigenvectors = data['eigenvectors']
+else:
+    update_pca_database()
 
 @app.route('/upload', methods=['POST'])
 def find_similar_images():
@@ -121,19 +131,10 @@ def upload_zip():
         zip_ref.extractall(DATABASE_PATH)
     os.remove(zip_path)
 
-    # Preprocess images and compute PCA
-    database_images, database_labels, database_paths = preprocess_images_from_directory(DATABASE_PATH)
-    database_features, data_mean, eigenvectors = compute_pca(database_images, NUM_PCA_COMPONENTS)
-    np.savez_compressed(
-        f"{PROCESSED_DATA_PATH}/database_pca.npz",
-        features=database_features,
-        labels=database_labels,
-        paths=database_paths,
-        mean=data_mean,
-        eigenvectors=eigenvectors
-    )
+    # Update PCA database
+    update_pca_database()
 
-    return jsonify({"message": "Files extracted successfully"})
+    return jsonify({"message": "Files extracted and database updated successfully"})
 
 @app.route('/images/<path:filename>')
 def serve_image(filename):
