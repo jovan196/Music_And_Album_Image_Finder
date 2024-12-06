@@ -1,9 +1,9 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
 import multer from 'multer';
 import nextConnect from 'next-connect';
 import axios from 'axios';
 import fs from 'fs';
 import FormData from 'form-data'; // Ensure this is installed
-import path from 'path';
 
 const storage = multer.diskStorage({
   destination: './uploads',
@@ -14,11 +14,11 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-const apiRoute = nextConnect();
+const apiRoute = nextConnect<NextApiRequest, NextApiResponse>();
 
 apiRoute.use(upload.single('image')); // Use multer middleware
 
-apiRoute.post(async (req, res) => {
+apiRoute.post(async (req: NextApiRequest & { file: Express.Multer.File}, res: NextApiResponse) => {
   const pythonBackendUrl = 'http://127.0.0.1:5000/upload'; // Replace with your Python backend URL
   const filePath = req.file.path;
 
@@ -37,7 +37,7 @@ apiRoute.post(async (req, res) => {
     // Send the response from the Python backend to the client
     res.status(200).json(response.data);
   } catch (error) {
-    console.error('Error communicating with Python backend:', error.message);
+    console.error('Error communicating with Python backend:', (error as Error).message);
     res.status(500).json({ error: 'Error communicating with backend' });
   }
 });
@@ -63,7 +63,7 @@ apiRoute.post('/upload-zip', async (req, res) => {
     // Send success response to the client
     res.status(200).json({ message: 'Zip file uploaded and processed successfully' });
   } catch (error) {
-    console.error('Error communicating with Python backend:', error.message);
+    console.error('Error communicating with Python backend:', (error as Error).message);
     res.status(500).json({ error: 'Error communicating with backend' });
   }
 });
