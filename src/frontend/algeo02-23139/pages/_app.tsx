@@ -1,6 +1,11 @@
 import type { AppProps } from 'next/app';
-import '../styles/globals.css'; // Pastikan path ini sesuai dengan struktur proyek Anda
+import '../styles/globals.css'; // Ensure this path is correct
+import Layout from '../components/Layout'; // Ensure this path is correct
 
 export default function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />;
+  return (
+    <Layout>
+      <Component {...pageProps} />
+    </Layout>
+  );
 }
