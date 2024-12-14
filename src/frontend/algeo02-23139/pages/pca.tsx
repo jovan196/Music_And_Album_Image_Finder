@@ -1,23 +1,30 @@
 import { useState } from "react";
 import axios from "axios";
 
-interface SimilarImage {
+interface SimilarItem {
   url: string;
-  distance: number;
+  label: string;
+  distance?: number;
+  similarity?: number;
+  associated_midi?: string;
+  associated_image?: string;
 }
 
 const PCA: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedZip, setSelectedZip] = useState<File | null>(null);
-  const [uploadedImageUrl, setUploadedImageUrl] = useState<string>("");
-  const [similarImages, setSimilarImages] = useState<SimilarImage[]>([]);
+  const [selectedMidi, setSelectedMidi] = useState<File | null>(null);
+  const [selectedMidiZip, setSelectedMidiZip] = useState<File | null>(null);
+  const [selectedMapper, setSelectedMapper] = useState<File | null>(null);
+  const [uploadedFileUrl, setUploadedFileUrl] = useState<string>("");
+  const [similarItems, setSimilarItems] = useState<SimilarItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       setSelectedFile(file);
-      setUploadedImageUrl(URL.createObjectURL(file));
+      setUploadedFileUrl(URL.createObjectURL(file));
     }
   };
 
@@ -25,6 +32,27 @@ const PCA: React.FC = () => {
     const file = event.target.files?.[0];
     if (file) {
       setSelectedZip(file);
+    }
+  };
+
+  const handleMidiChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedMidi(file);
+    }
+  };
+
+  const handleMidiZipChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedMidiZip(file);
+    }
+  };
+
+  const handleMapperChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedMapper(file);
     }
   };
 
@@ -39,17 +67,30 @@ const PCA: React.FC = () => {
 
     try {
       setIsLoading(true);
-      const response = await axios.post("http://127.0.0.1:5000/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      const filteredImages = response.data.similar_images.filter(
-        (image: SimilarImage) => image.distance <= 10000
-      );
-      setSimilarImages(filteredImages);
+      const response = await axios.post(`/api/upload?endpoint=upload`, formData);
+      setSimilarItems(response.data.similar_items);
     } catch (error) {
       console.error("Error uploading file:", (error as Error).message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleMidiUpload = async () => {
+    if (!selectedMidi) {
+      alert("Please select a MIDI file first!");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", selectedMidi);
+
+    try {
+      setIsLoading(true);
+      const response = await axios.post(`/api/upload?endpoint=upload-mid`, formData);
+      setSimilarItems(response.data.similar_items);
+    } catch (error) {
+      console.error("Error uploading MIDI file:", (error as Error).message);
     } finally {
       setIsLoading(false);
     }
@@ -62,18 +103,54 @@ const PCA: React.FC = () => {
     }
 
     const formData = new FormData();
-    formData.append("zip", selectedZip);
+    formData.append("file", selectedZip);
 
     try {
       setIsLoading(true);
-      await axios.post("http://127.0.0.1:5000/upload-zip", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      alert("Zip file uploaded and processed successfully!");
+      await axios.post(`/api/upload?endpoint=upload-zip`, formData);
+      alert("Image database updated successfully!");
     } catch (error) {
       console.error("Error uploading zip file:", (error as Error).message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleMidiZipUpload = async () => {
+    if (!selectedMidiZip) {
+      alert("Please select a MIDI zip file first!");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", selectedMidiZip);
+
+    try {
+      setIsLoading(true);
+      await axios.post(`/api/upload?endpoint=upload-mid-zip`, formData);
+      alert("MIDI database updated successfully!");
+    } catch (error) {
+      console.error("Error uploading MIDI zip file:", (error as Error).message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleMapperUpload = async () => {
+    if (!selectedMapper) {
+      alert("Please select a mapper file first!");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", selectedMapper);
+
+    try {
+      setIsLoading(true);
+      await axios.post(`/api/upload?endpoint=upload-mapper`, formData);
+      alert("Mapper updated successfully!");
+    } catch (error) {
+      console.error("Error uploading mapper file:", (error as Error).message);
     } finally {
       setIsLoading(false);
     }
@@ -85,6 +162,7 @@ const PCA: React.FC = () => {
         <div className="px-4 py-6 sm:px-0">
           <div className="flex flex-col items-center">
             <div className="w-full max-w-md space-y-6">
+              {/* Upload Single Image */}
               <div className="mb-4">
                 <label
                   htmlFor="file-upload"
@@ -105,15 +183,17 @@ const PCA: React.FC = () => {
                     hover:file:bg-blue-200 focus:outline-none"
                 />
               </div>
-              {uploadedImageUrl && (
+  
+              {uploadedFileUrl && (
                 <div className="flex justify-center">
                   <img
-                    src={uploadedImageUrl}
+                    src={uploadedFileUrl}
                     alt="Uploaded Preview"
                     className="w-64 h-64 object-cover rounded-xl shadow-lg"
                   />
                 </div>
               )}
+  
               <button
                 onClick={handleUpload}
                 disabled={isLoading}
@@ -126,6 +206,8 @@ const PCA: React.FC = () => {
                 {isLoading ? "Mengupload..." : "Cari Gambar Mirip"}
               </button>
             </div>
+  
+            {/* Upload Zip */}
             <div className="w-full max-w-md space-y-6 mt-8">
               <div className="mb-4">
                 <label
@@ -160,40 +242,135 @@ const PCA: React.FC = () => {
               </button>
             </div>
           </div>
-          {similarImages.length > 0 && (
+  
+          {/* MIDI Search */}
+          <div className="mt-8 p-6 bg-white rounded-xl shadow-md">
+            <h2 className="text-2xl font-bold mb-4">MIDI Search</h2>
+            <input
+              type="file"
+              accept=".mid"
+              onChange={handleMidiChange}
+              className="block w-full mb-4"
+            />
+            <button
+              onClick={handleMidiUpload}
+              disabled={isLoading}
+              className="w-full py-2 px-4 bg-blue-600 text-white rounded-lg"
+            >
+              Search Similar MIDI
+            </button>
+          </div>
+  
+          {/* Update Databases */}
+          <div className="mt-8 p-6 bg-white rounded-xl shadow-md">
+            <h2 className="text-2xl font-bold mb-4">Update Databases</h2>
+  
+            {/* Update MIDI Database */}
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold mb-2">Update MIDI Database</h3>
+              <input
+                type="file"
+                accept=".zip"
+                onChange={handleMidiZipChange}
+                className="block w-full mb-2"
+              />
+              <button
+                onClick={handleMidiZipUpload}
+                disabled={isLoading}
+                className="w-full py-2 px-4 bg-green-600 text-white rounded-lg"
+              >
+                Upload MIDI ZIP
+              </button>
+            </div>
+  
+            {/* Update Mapper */}
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Update Mapper</h3>
+              <input
+                type="file"
+                accept=".json"
+                onChange={handleMapperChange}
+                className="block w-full mb-2"
+              />
+              <button
+                onClick={handleMapperUpload}
+                disabled={isLoading}
+                className="w-full py-2 px-4 bg-green-600 text-white rounded-lg"
+              >
+                Upload Mapper
+              </button>
+            </div>
+          </div>
+  
+          {/* Similar Items */}
+          {similarItems.length > 0 && (
             <div className="mt-12">
               <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">
-                Similar Images
+                Similar Items
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {similarImages.map((image, index) => (
+                {similarItems.map((item, index) => (
                   <div
                     key={index}
-                    className="relative group cursor-pointer bg-white rounded-lg overflow-hidden shadow-lg"
-                    onClick={() => window.open(image.url, "_blank")}
+                    className="relative group bg-white rounded-lg overflow-hidden shadow-lg p-4"
                   >
-                    <img
-                      src={image.url}
-                      alt={`Similar image ${index + 1}`}
-                      className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900 to-transparent text-white text-sm text-center py-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      Distance: {image.distance.toFixed(2)}
+                    {item.url.endsWith('.mid') ? (
+                      <div className="flex items-center justify-center h-48 bg-gray-200">
+                        <p className="text-lg font-semibold text-gray-700">MIDI File</p>
+                      </div>
+                    ) : (
+                      <img
+                        src={item.url}
+                        alt={item.label}
+                        className="w-full h-48 object-cover"
+                      />
+                    )}
+                    <div className="mt-2">
+                      <p className="font-semibold">{item.label}</p>
+                      {item.distance !== undefined && (
+                        <p>Distance: {item.distance.toFixed(2)}</p>
+                      )}
+                      {item.similarity !== undefined && (
+                        <p>Similarity: {item.similarity.toFixed(2)}</p>
+                      )}
+                      <div className="mt-2 space-x-2">
+                        {item.associated_midi && (
+                          <a
+                            href={item.associated_midi}
+                            className="text-blue-600 hover:underline"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Download MIDI
+                          </a>
+                        )}
+                        {item.associated_image && (
+                          <a
+                            href={item.associated_image}
+                            className="text-blue-600 hover:underline"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            View Image
+                          </a>
+                        )}
+                      </div>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
           )}
-          {similarImages.length === 0 && uploadedImageUrl && !isLoading && (
+  
+          {similarItems.length === 0 && uploadedFileUrl && !isLoading && (
             <p className="text-center text-gray-600 mt-8 text-lg">
-              Tidak ada gambar mirip yang ditemukan.
+              Tidak ada item mirip yang ditemukan.
             </p>
           )}
         </div>
       </div>
     </div>
   );
-};
+}  
 
 export default PCA;
