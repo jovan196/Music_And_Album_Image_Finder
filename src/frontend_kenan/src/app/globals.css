@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Container utama menggunakan flexbox */
+.container {
+  display: flex;
+  position: relative;
+  flex-direction: row; /* Membuat elemen horizontal (default) */
+  height: 100vh; /* Full height of the viewport */
+}
+
+/* Styling untuk sidebar */
+.sidebar {
+  flex: 0 0 250px; /* Sidebar memiliki lebar tetap 250px */
+  background-color: #f4f4f4; /* Warna latar belakang sidebar */
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Shadow untuk efek kedalaman */
+  display: flex;
+  flex-direction: column; /* Memastikan item dalam sidebar vertikal */
+  z-index: 2;
+}
+
+/* Styling untuk daftar item dalam sidebar */
+.sidebar ul {
+  list-style: none; /* Menghapus bullet points */
+  padding: 0;
+}
+
+.sidebar li {
+  margin: 10px 0; /* Jarak antar item */
+}
+
+/* Styling untuk konten utama */
+.content {
+  flex-grow: 1; /* Konten mengambil sisa ruang */
+  padding: 20px;
+}
+
+body {
+  background-image: url('/tubesalgeo2.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
