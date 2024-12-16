@@ -27,8 +27,6 @@ NUM_PCA_COMPONENTS = 100
 WINDOW_SIZE = 40
 SLIDE_SIZE = 6
 
-TOP_N = 12
-
 # Ensure directories exist
 for path in [DATABASE_PATH_IMAGES, DATABASE_PATH_MIDI, PROCESSED_DATA_PATH, UPLOADS_PATH, MAPPER_PATH, PROCESSED_DATA_PATH_IMAGES, PROCESSED_DATA_PATH_MIDI]:
     if not os.path.exists(path):
@@ -44,6 +42,12 @@ data_mean = None
 eigenvectors = None
 processed_midi_dataset = None
 midi_dataset_labels = None
+
+def delete_files_in_directory(directory):
+    for file_name in os.listdir(directory):
+        file_path = os.path.join(directory, file_name)
+        if os.path.isfile(file_path):
+            os.remove(file_path)
 
 # Load or update mapper
 def load_mapper():
@@ -278,7 +282,7 @@ def handle_image_upload(uploaded_file):
 
     # Get top N similar images
     similar_images = []
-    for idx in sorted_indices[:TOP_N]:
+    for idx in sorted_indices[:len(database_labels)]:  # Get all results
         rel_path = os.path.relpath(database_paths[idx], DATABASE_PATH_IMAGES)
         image_label = database_labels[idx]
         similar_image = {
@@ -302,6 +306,7 @@ def handle_image_upload(uploaded_file):
     })
 
 def handle_image_zip_upload(uploaded_file):
+    delete_files_in_directory(DATABASE_PATH_IMAGES)
     zip_path = os.path.join(UPLOADS_PATH, uploaded_file.filename)
     uploaded_file.save(zip_path)
 
@@ -341,7 +346,7 @@ def handle_midi_upload(uploaded_file):
 
     # Prepare response
     similar_midis = []
-    for result in results[:TOP_N]:  # Get top 5 results
+    for result in results[:len(midi_dataset_labels)]:  # Get all results
         idx = result['index']
         midi_label = midi_dataset_labels[idx]
         midi_file_name = midi_label + '.mid'
@@ -367,6 +372,7 @@ def handle_midi_upload(uploaded_file):
     })
 
 def handle_midi_zip_upload(uploaded_file):
+    delete_files_in_directory(DATABASE_PATH_MIDI)
     zip_path = os.path.join(UPLOADS_PATH, uploaded_file.filename)
     uploaded_file.save(zip_path)
 
@@ -380,6 +386,7 @@ def handle_midi_zip_upload(uploaded_file):
     return jsonify({"message": "MIDI ZIP uploaded and database updated successfully"})
 
 def handle_mapper_upload(uploaded_file):
+    delete_files_in_directory(MAPPER_PATH)
     mapper_path = os.path.join(MAPPER_PATH, 'mapper.json')
     uploaded_file.save(mapper_path)
     load_mapper()

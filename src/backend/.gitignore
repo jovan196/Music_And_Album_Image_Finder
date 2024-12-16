@@ -1,0 +1,6 @@
+# Ignore everything inside 'uploads' and 'venv' folders
+uploads/*
+venv/*
+
+# Allow the folder itself (to ensure it stays tracked)
+!uploads/.gitkeep

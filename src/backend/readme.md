@@ -1,13 +1,13 @@
 Berikut adalah langkah-langkah untuk menjalankan backend `finder.py`.
-```markdown
-# Setup
+
+# Persiapan
 
 ## Aplikasi yang diperlukan
 
 1. **Python**: Python (versi 3.6 atau lebih baru).
 2. **pip**: Python Install Package
 
-## Step-by-Step
+## Langkah-langkah
 
 1. **Clone Repository**:
    ```sh
@@ -15,39 +15,39 @@ Berikut adalah langkah-langkah untuk menjalankan backend `finder.py`.
    cd <repository-directory>
    ```
 
-2. **Create Virtual Environment** (optional but recommended):
+2. **Buat Virtual Environment** (opsional tapi direkomendasikan):
    ```sh
    python -m venv venv
-   source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+   source venv/bin/activate  # Pada Windows gunakan `venv\Scripts\activate`
    ```
 
-3. **Install Dependencies**:
-   Pastikan Anda berada di direktori yang sama dengan file `modules.txt`, lalu jalankan:
+3. **Instal Dependensi**:
+   Pastikan Anda berada di direktori yang sama dengan file `requirements.txt`, lalu jalankan:
    ```sh
-   pip install -r modules.txt
+   pip install -r requirements.txt
    ```
 
-## Running the Backend
+## Menjalankan Backend
 
-1. **Navigate to Backend Directory**:
+1. **Masuk ke Direktori Backend**:
    ```sh
    cd src/backend
    ```
 
-2. **Run the Flask Application**:
+2. **Jalankan Aplikasi Flask**:
    ```sh
    python finder.py
    ```
 
-3. **Access the Application**:
+3. **Akses Aplikasi**:
    Buka browser dan akses `http://localhost:5000` untuk melihat aplikasi berjalan.
 
-## Additional Information
+## Informasi Tambahan
 
-- **Database Paths**:
-  - Images: `./database/images`
-  - MIDI Dataset: `./database/midi_dataset`
-  - Processed Data: `./processed`
+- **Path Database**:
+  - Gambar: `./database/images`
+  - Dataset MIDI: `./database/midi_dataset`
+  - Data yang Diproses: `./processed`
 
 - **Logging**:
-  - Logging level diatur ke `INFO` untuk menampilkan informasi log.
+  - Level logging diatur ke `INFO` untuk menampilkan informasi log.

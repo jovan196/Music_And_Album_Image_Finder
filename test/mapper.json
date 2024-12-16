@@ -1,52 +1,352 @@
 {
-  "10.jpg": {
+  "1.jpg": {
     "midi": "x (1).mid",
     "title": "Song Title 1",
     "artist": "Artist 1",
     "album" : "Album 1",
     "year": "2020"
   },
-  "10000.jpg": {
+  "2.jpg": {
     "midi": "x (2).mid",
     "title": "Song Title 2",
     "artist": "Artist 2",
     "album" : "Album 2",
     "year": "2019"
   },
-  "10002.jpg": {
+  "3.jpg": {
     "midi": "x (3).mid",
     "title": "Song Title 3",
     "artist": "Artist 3",
     "album" : "Album 3",
     "year": "2018"
   },
-  "10003.jpg": {
+  "4.jpg": {
     "midi": "x (4).mid",
     "title": "Song Title 4",
     "artist": "Artist 4",
     "album" : "Album 4",
     "year": "2017"
   },
-  "10005.jpg": {
+  "5.jpg": {
     "midi": "x (5).mid",
     "title": "Song Title 5",
     "artist": "Artist 5",
     "album" : "Album 5",
     "year": "2016"
   },
-  "10011.jpg": {
+  "6.jpg": {
     "midi": "x (6).mid",
     "title": "Song Title 6",
     "artist": "Artist 6",
     "album" : "Album 6",
     "year": "2015"
   },
-  "63300cfd403f0.jpg": {
-	"midi": "x (7).mid",
-	"title": "Song Title 7",
-    "artist": "Artist 7",
-    "album" : "Album 7",
-    "year": "2019"
-  }
-	
+"7.jpg": {
+  "midi": "x (7).mid",
+  "title": "Song Title 7",
+  "artist": "Artist 7",
+  "album": "Album 7",
+  "year": "2014"
+},
+"8.jpg": {
+  "midi": "x (8).mid",
+  "title": "Song Title 8",
+  "artist": "Artist 8",
+  "album": "Album 8",
+  "year": "2013"
+},
+"9.jpg": {
+  "midi": "x (9).mid",
+  "title": "Song Title 9",
+  "artist": "Artist 9",
+  "album": "Album 9",
+  "year": "2012"
+},
+"10.jpg": {
+  "midi": "x (10).mid",
+  "title": "Song Title 10",
+  "artist": "Artist 10",
+  "album": "Album 10",
+  "year": "2011"
+},
+"11.jpg": {
+  "midi": "x (11).mid",
+  "title": "Song Title 11",
+  "artist": "Artist 11",
+  "album": "Album 11",
+  "year": "2010"
+},
+"12.jpg": {
+  "midi": "x (12).mid",
+  "title": "Song Title 12",
+  "artist": "Artist 12",
+  "album": "Album 12",
+  "year": "2009"
+},
+"13.jpg": {
+  "midi": "x (13).mid",
+  "title": "Song Title 13",
+  "artist": "Artist 13",
+  "album": "Album 13",
+  "year": "2008"
+},
+"14.jpg": {
+  "midi": "x (14).mid",
+  "title": "Song Title 14",
+  "artist": "Artist 14",
+  "album": "Album 14",
+  "year": "2007"
+},
+"15.jpg": {
+  "midi": "x (15).mid",
+  "title": "Song Title 15",
+  "artist": "Artist 15",
+  "album": "Album 15",
+  "year": "2006"
+},
+"16.jpg": {
+  "midi": "x (16).mid",
+  "title": "Song Title 16",
+  "artist": "Artist 16",
+  "album": "Album 16",
+  "year": "2005"
+},
+"17.jpg": {
+  "midi": "x (17).mid",
+  "title": "Song Title 17",
+  "artist": "Artist 17",
+  "album": "Album 17",
+  "year": "2004"
+},
+"18.jpg": {
+  "midi": "x (18).mid",
+  "title": "Song Title 18",
+  "artist": "Artist 18",
+  "album": "Album 18",
+  "year": "2003"
+},
+"19.jpg": {
+  "midi": "x (19).mid",
+  "title": "Song Title 19",
+  "artist": "Artist 19",
+  "album": "Album 19",
+  "year": "2002"
+},
+"20.jpg": {
+  "midi": "x (20).mid",
+  "title": "Song Title 20",
+  "artist": "Artist 20",
+  "album": "Album 20",
+  "year": "2001"
+},
+"21.jpg": {
+  "midi": "x (21).mid",
+  "title": "Song Title 21",
+  "artist": "Artist 21",
+  "album": "Album 21",
+  "year": "2000"
+},
+"22.jpg": {
+  "midi": "x (22).mid",
+  "title": "Song Title 22",
+  "artist": "Artist 22",
+  "album": "Album 22",
+  "year": "1999"
+},
+"23.jpg": {
+  "midi": "x (23).mid",
+  "title": "Song Title 23",
+  "artist": "Artist 23",
+  "album": "Album 23",
+  "year": "1998"
+},
+"24.jpg": {
+  "midi": "x (24).mid",
+  "title": "Song Title 24",
+  "artist": "Artist 24",
+  "album": "Album 24",
+  "year": "1997"
+},
+"25.jpg": {
+  "midi": "x (25).mid",
+  "title": "Song Title 25",
+  "artist": "Artist 25",
+  "album": "Album 25",
+  "year": "1996"
+},
+"26.jpg": {
+  "midi": "x (26).mid",
+  "title": "Song Title 26",
+  "artist": "Artist 26",
+  "album": "Album 26",
+  "year": "1995"
+},
+"27.jpg": {
+  "midi": "x (27).mid",
+  "title": "Song Title 27",
+  "artist": "Artist 27",
+  "album": "Album 27",
+  "year": "1994"
+},
+"28.jpg": {
+  "midi": "x (28).mid",
+  "title": "Song Title 28",
+  "artist": "Artist 28",
+  "album": "Album 28",
+  "year": "1993"
+},
+"29.jpg": {
+  "midi": "x (29).mid",
+  "title": "Song Title 29",
+  "artist": "Artist 29",
+  "album": "Album 29",
+  "year": "1992"
+},
+"30.jpg": {
+  "midi": "x (30).mid",
+  "title": "Song Title 30",
+  "artist": "Artist 30",
+  "album": "Album 30",
+  "year": "1991"
+},
+"31.jpg": {
+  "midi": "x (31).mid",
+  "title": "Song Title 31",
+  "artist": "Artist 31",
+  "album": "Album 31",
+  "year": "1990"
+},
+"32.jpg": {
+  "midi": "x (32).mid",
+  "title": "Song Title 32",
+  "artist": "Artist 32",
+  "album": "Album 32",
+  "year": "1989"
+},
+"33.jpg": {
+  "midi": "x (33).mid",
+  "title": "Song Title 33",
+  "artist": "Artist 33",
+  "album": "Album 33",
+  "year": "1988"
+},
+"34.jpg": {
+  "midi": "x (34).mid",
+  "title": "Song Title 34",
+  "artist": "Artist 34",
+  "album": "Album 34",
+  "year": "1987"
+},
+"35.jpg": {
+  "midi": "x (35).mid",
+  "title": "Song Title 35",
+  "artist": "Artist 35",
+  "album": "Album 35",
+  "year": "1986"
+},
+"36.jpg": {
+  "midi": "x (36).mid",
+  "title": "Song Title 36",
+  "artist": "Artist 36",
+  "album": "Album 36",
+  "year": "1985"
+},
+"37.jpg": {
+  "midi": "x (37).mid",
+  "title": "Song Title 37",
+  "artist": "Artist 37",
+  "album": "Album 37",
+  "year": "1984"
+},
+"38.jpg": {
+  "midi": "x (38).mid",
+  "title": "Song Title 38",
+  "artist": "Artist 38",
+  "album": "Album 38",
+  "year": "1983"
+},
+"39.jpg": {
+  "midi": "x (39).mid",
+  "title": "Song Title 39",
+  "artist": "Artist 39",
+  "album": "Album 39",
+  "year": "1982"
+},
+"40.jpg": {
+  "midi": "x (40).mid",
+  "title": "Song Title 40",
+  "artist": "Artist 40",
+  "album": "Album 40",
+  "year": "1981"
+},
+"41.jpg": {
+  "midi": "x (41).mid",
+  "title": "Song Title 41",
+  "artist": "Artist 41",
+  "album": "Album 41",
+  "year": "1980"
+},
+"42.jpg": {
+  "midi": "x (42).mid",
+  "title": "Song Title 42",
+  "artist": "Artist 42",
+  "album": "Album 42",
+  "year": "1979"
+},
+"43.jpg": {
+  "midi": "x (43).mid",
+  "title": "Song Title 43",
+  "artist": "Artist 43",
+  "album": "Album 43",
+  "year": "1978"
+},
+"44.jpg": {
+  "midi": "x (44).mid",
+  "title": "Song Title 44",
+  "artist": "Artist 44",
+  "album": "Album 44",
+  "year": "1977"
+},
+"45.jpg": {
+  "midi": "x (45).mid",
+  "title": "Song Title 45",
+  "artist": "Artist 45",
+  "album": "Album 45",
+  "year": "1976"
+},
+"46.jpg": {
+  "midi": "x (46).mid",
+  "title": "Song Title 46",
+  "artist": "Artist 46",
+  "album": "Album 46",
+  "year": "1975"
+},
+"47.jpg": {
+  "midi": "x (47).mid",
+  "title": "Song Title 47",
+  "artist": "Artist 47",
+  "album": "Album 47",
+  "year": "1974"
+},
+"48.jpg": {
+  "midi": "x (48).mid",
+  "title": "Song Title 48",
+  "artist": "Artist 48",
+  "album": "Album 48",
+  "year": "1973"
+},
+"49.jpg": {
+  "midi": "x (49).mid",
+  "title": "Song Title 49",
+  "artist": "Artist 49",
+  "album": "Album 49",
+  "year": "1972"
+},
+"50.jpg": {
+  "midi": "x (50).mid",
+  "title": "Song Title 50",
+  "artist": "Artist 50",
+  "album": "Album 50",
+  "year": "1971"
+}
 }

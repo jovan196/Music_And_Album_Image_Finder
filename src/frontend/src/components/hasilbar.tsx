@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
+import { useState } from "react";
 import React from 'react';
-import axios from "axios";
 
 // Update the SimilarItem interface to match the backend response
 interface SimilarItem {
@@ -37,7 +38,7 @@ export default function HasilBar({
   // Filter valid items with similarity between 0 and 1 (0-100%)
   const validSimilarItems = similarItems.filter(
     item => item.similarity !== undefined && 
-    item.similarity >= 0 && 
+    item.similarity >= 0.55 && 
     item.similarity <= 1
   );
 
@@ -151,7 +152,7 @@ export default function HasilBar({
       )}
       {validSimilarItems.length === 0 && !isLoading && hasUploads && (
         <p className="text-center text-gray-600 mt-8 text-lg">
-          No similar items found within valid similarity range.
+          
         </p>
       )}
     </div>
