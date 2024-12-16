@@ -200,7 +200,10 @@ def initialize_databases():
         data_mean = data['mean']
         eigenvectors = data['eigenvectors']
     else:
+        logging.info("No preprocessed PCA data found. Preprocessing image data...")
         update_image_database()
+        if database_features.size == 0:
+            logging.warning("Image database is empty after preprocessing.")
 
     # Load or preprocess MIDI data
     if os.path.exists(f"{PROCESSED_DATA_PATH_MIDI}/processed_midi.npz"):
@@ -209,7 +212,10 @@ def initialize_databases():
         processed_midi_dataset = data['dataset']
         midi_dataset_labels = data['labels']
     else:
+        logging.info("No processed MIDI data found. Preprocessing MIDI data...")
         update_midi_database()
+        if not processed_midi_dataset:
+            logging.warning("MIDI database is empty after preprocessing.")
 
     # Load mapper
     load_mapper()
@@ -243,6 +249,9 @@ def upload_mapper():
 
 def handle_image_upload(uploaded_file):
     global mapper
+    if database_features.size == 0:
+        return jsonify({"similar_items": [], "message": "Image database is empty."})
+
     img_path = os.path.join(UPLOADS_PATH, uploaded_file.filename)
     uploaded_file.save(img_path)
 
@@ -293,6 +302,9 @@ def handle_image_zip_upload(uploaded_file):
 
 def handle_midi_upload(uploaded_file):
     global mapper
+    if not processed_midi_dataset:
+        return jsonify({"similar_items": [], "message": "MIDI database is empty."})
+
     midi_path = os.path.join(UPLOADS_PATH, uploaded_file.filename)
     uploaded_file.save(midi_path)
 
