@@ -40,5 +40,13 @@
     "artist": "Artist 6",
     "album" : "Album 6",
     "year": "2015"
+  },
+  "63300cfd403f0.jpg": {
+	"midi": "x (7).mid",
+	"title": "Song Title 7",
+    "artist": "Artist 7",
+    "album" : "Album 7",
+    "year": "2019"
   }
+	
 }

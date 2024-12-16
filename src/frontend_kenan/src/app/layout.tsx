@@ -46,6 +46,10 @@ interface SimilarItem {
   similarity?: number;
   associated_midi?: string;
   associated_image?: string;
+  title?: string;
+  artist?: string;
+  album?: string;
+  year?: string;
 }
 
 export default function RootLayout({
@@ -63,16 +67,17 @@ export default function RootLayout({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleUpload = async (file: File) => {
+  const handleUpload = async (file: File, endpoint: string) => {
     const formData = new FormData();
     formData.append("file", file);
 
     try {
       setIsLoading(true);
-      const response = await axios.post(`/api/upload?endpoint=upload`, formData);
+      const response = await axios.post(`/api/upload?endpoint=${endpoint}`, formData);
+      setSimilarItems(response.data.similar_items || []);
     } catch (err) {
-      console.error("Error uploading file:", (err as Error).message);
-      setError((err as Error).message);
+      console.error("Error uploading file:", err);
+      setError(err instanceof Error ? err.message : "Error uploading file");
     } finally {
       setIsLoading(false);
     }
@@ -88,8 +93,8 @@ export default function RootLayout({
             onMidiSelect={setSelectedMidi}
             onMidiZipSelect={setSelectedMidiZip}
             onMapperSelect={setSelectedMapper}
-            onUpload={handleUpload}
-            onMidiUpload={handleUpload}
+            onUpload={(file) => handleUpload(file, 'upload')}
+            onMidiUpload={(file) => handleUpload(file, 'upload-mid')}
             isLoading={isLoading}
             uploadedFileUrl={uploadedFileUrl}
             setUploadedFileUrl={setUploadedFileUrl}
