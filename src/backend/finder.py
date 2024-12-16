@@ -282,7 +282,7 @@ def handle_image_upload(uploaded_file):
         rel_path = os.path.relpath(database_paths[idx], DATABASE_PATH_IMAGES)
         image_label = database_labels[idx]
         similar_image = {
-            "url": f"http://127.0.0.1:5000/images/{rel_path}".replace("\\", "/"),
+            "url": f"{request.host_url}images/{rel_path}".replace("\\", "/"),
             "label": image_label,
             "similarity": float(similarities[idx])
         }
@@ -290,7 +290,7 @@ def handle_image_upload(uploaded_file):
         # Get associated song details from mapper
         song_info = mapper.get(image_label)
         if song_info:
-            similar_image["associated_midi"] = f"http://127.0.0.1:5000/midi/{song_info['midi']}"
+            similar_image["associated_midi"] = f"{request.host_url}midi/{song_info['midi']}"
             similar_image["title"] = song_info.get("title", "")
             similar_image["artist"] = song_info.get("artist", "")
             similar_image["album"] = song_info.get("album", "")
@@ -348,12 +348,12 @@ def handle_midi_upload(uploaded_file):
         midi_info = {
             "label": midi_label,
             "similarity": result['similarity'],
-            "url": f"http://127.0.0.1:5000/midi/{midi_file_name}"
+            "url": f"{request.host_url}midi/{midi_file_name}"
         }
         # Get associated image and song details from mapper
         for image_name, song_info in mapper.items():
             if song_info['midi'] == midi_file_name:
-                midi_info["associated_image"] = f"http://127.0.0.1:5000/images/{image_name}"
+                midi_info["associated_image"] = f"{request.host_url}images/{image_name}"
                 midi_info["title"] = song_info.get("title", "")
                 midi_info["artist"] = song_info.get("artist", "")
                 midi_info["album"] = song_info.get("album", "")
