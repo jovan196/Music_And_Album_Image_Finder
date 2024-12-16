@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import HasilBar from './hasilbar';
 
 interface SimilarItem {
   url: string;
   label: string;
+  distance?: number;
+  similarity?: number;
+  associated_midi?: string;
+  associated_image?: string;
 }
 
 interface SideBarProps {
@@ -40,6 +45,8 @@ export default function SideBar({
   const [uploadedMidiZipName, setUploadedMidiZipName] = useState<string | null>(null);
   const [uploadedMapperName, setUploadedMapperName] = useState<string | null>(null);
   const [similarItems, setSimilarItems] = useState<SimilarItem[]>([]);
+  const [isLoadingState, setIsLoadingState] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
@@ -75,18 +82,53 @@ export default function SideBar({
     onMapperSelect(file);
   };
 
-  const handleUploadClick = () => {
+  const handleUploadClick = async () => {
     if (selectedFile) {
-      onUpload(selectedFile);
-      setSimilarItems([]); // Clear similar items
+      setIsLoadingState(true);
+      setError(null);
+      try {
+        const formData = new FormData();
+        formData.append('image', selectedFile);
+
+        const response = await axios.post('/api/upload', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+
+        setSimilarItems(response.data.similarItems);
+      } catch (error) {
+        console.error("Error fetching similar items:", error);
+        setError("Error fetching similar items. Please try again.");
+      } finally {
+        setIsLoadingState(false);
+      }
     } else {
       alert("Please select a file first!");
     }
   };
 
-  const handleMidiUploadClick = () => {
+  const handleMidiUploadClick = async () => {
     if (selectedMidi) {
-      onMidiUpload(selectedMidi);
+      setIsLoadingState(true);
+      setError(null);
+      try {
+        const formData = new FormData();
+        formData.append('midi', selectedMidi);
+
+        const response = await axios.post('/api/upload-midi', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+
+        setSimilarItems(response.data.similarItems);
+      } catch (error) {
+        console.error("Error fetching similar items:", error);
+        setError("Error fetching similar items. Please try again.");
+      } finally {
+        setIsLoadingState(false);
+      }
     } else {
       alert("Please select a MIDI file first!");
     }
@@ -135,14 +177,14 @@ export default function SideBar({
                     </div>
                     <button
                       onClick={handleUploadClick}
-                      disabled={isLoading}
+                      disabled={isLoadingState}
                       className={`w-full py-2 px-3 rounded-lg text-white mt-1 font-bold shadow-lg transform transition-transform ${
-                        isLoading
+                        isLoadingState
                           ? "bg-gray-400 cursor-not-allowed"
                           : "bg-black hover:bg-gray-900 hover:scale-105"
                       }`}
                     >
-                      {isLoading ? "Mengupload..." : "Search"}
+                      {isLoadingState ? "Mengupload..." : "Search"}
                     </button>
                   </div>
 
@@ -167,14 +209,14 @@ export default function SideBar({
                     </div>
                     <button
                       onClick={handleMidiUploadClick}
-                      disabled={isLoading}
+                      disabled={isLoadingState}
                       className={`w-full py-2 px-3 rounded-lg text-white mt-1 font-bold shadow-lg transform transition-transform ${
-                        isLoading
+                        isLoadingState
                           ? "bg-gray-400 cursor-not-allowed"
                           : "bg-black hover:bg-gray-900 hover:scale-105"
                       }`}
                     >
-                      {isLoading ? "Mengupload..." : "Search"}
+                      {isLoadingState ? "Mengupload..." : "Search"}
                     </button>
                   </div>
                   {/* Upload Zip File */}
@@ -187,7 +229,7 @@ export default function SideBar({
                     </label>
                     <button
                       className={`w-full py-2 px-3 rounded-lg text-white font-bold shadow-lg transform transition-transform ${
-                        isLoading
+                        isLoadingState
                           ? "bg-gray-400 cursor-not-allowed"
                           : "bg-purple-950 hover:bg-purple-900 hover:scale-105"
                       }`}
@@ -212,7 +254,7 @@ export default function SideBar({
                     </label>
                     <button
                       className={`w-full py-2 px-3 rounded-lg text-white font-bold shadow-lg transform transition-transform ${
-                        isLoading
+                        isLoadingState
                           ? "bg-gray-400 cursor-not-allowed"
                           : "bg-purple-950 hover:bg-purple-900 hover:scale-105"
                       }`}
@@ -237,7 +279,7 @@ export default function SideBar({
                     </label>
                     <button
                       className={`w-full py-2 px-3 rounded-lg text-white font-bold shadow-lg transform transition-transform ${
-                        isLoading
+                        isLoadingState
                           ? "bg-gray-400 cursor-not-allowed"
                           : "bg-purple-950 hover:bg-purple-900 hover:scale-105"
                       }`}
@@ -267,6 +309,13 @@ export default function SideBar({
           </div>
         </div>
       </nav>
+      <HasilBar
+        selectedFile={selectedFile}
+        selectedZip={selectedZip}
+        similarItems={similarItems}
+        isLoading={isLoadingState}
+        error={error}
+      />
     </div>
   );
 }

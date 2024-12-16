@@ -3,7 +3,7 @@
 import { useState } from "react";
 import localFont from "next/font/local";
 import SideBar from "../components/sidebar";
-import HasilBar from "../components/HasilBar";
+import HasilBar from "../components/hasilbar";
 import Page from "../app/page";
 import "./globals.css";
 import axios from "axios";
@@ -61,6 +61,7 @@ export default function RootLayout({
   const [uploadedFileUrl, setUploadedFileUrl] = useState<string>("");
   const [similarItems, setSimilarItems] = useState<SimilarItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleUpload = async (file: File) => {
     const formData = new FormData();
@@ -69,9 +70,9 @@ export default function RootLayout({
     try {
       setIsLoading(true);
       const response = await axios.post(`/api/upload?endpoint=upload`, formData);
-      setSimilarItems(response.data.similar_items);
-    } catch (error) {
-      console.error("Error uploading file:", (error as Error).message);
+    } catch (err) {
+      console.error("Error uploading file:", (err as Error).message);
+      setError((err as Error).message);
     } finally {
       setIsLoading(false);
     }
@@ -93,7 +94,13 @@ export default function RootLayout({
             uploadedFileUrl={uploadedFileUrl}
             setUploadedFileUrl={setUploadedFileUrl}
           />
-          <HasilBar selectedFile={selectedFile} selectedZip={selectedZip} similarItems={similarItems} />
+          <HasilBar
+        selectedFile={selectedFile}
+        selectedZip={selectedZip}
+        similarItems={similarItems}
+        isLoading={isLoading}
+        error={error}
+      />
           <Page />
           <main>{children}</main>
         </div>

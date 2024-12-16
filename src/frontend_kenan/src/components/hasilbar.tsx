@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import React from 'react';
+import axios from "axios";
 
 interface SimilarItem {
   url: string;
@@ -15,53 +15,31 @@ interface HasilBarProps {
   selectedFile: File | null;
   selectedZip: File | null;
   similarItems: SimilarItem[];
+  isLoading: boolean;
+  error: string | null;
 }
 
-export default function HasilBar({ selectedFile, selectedZip, similarItems }: HasilBarProps) {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [similarItemsState, setSimilarItems] = useState<SimilarItem[]>(similarItems);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (selectedFile) {
-        setIsLoading(true);
-        try {
-          const formData = new FormData();
-          formData.append('image', selectedFile);
-
-          const response = await axios.post('/api/upload', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          });
-
-          setSimilarItems(response.data.similarItems);
-        } catch (error) {
-          console.error("Error fetching similar items:", error);
-        } finally {
-          setIsLoading(false);
-        }
-      }
-    };
-
-    fetchData();
-  }, [selectedFile]);
-
-  const hasUploads = selectedFile || selectedZip || similarItemsState.length > 0;
+export default function HasilBar({ selectedFile, selectedZip, similarItems, isLoading, error }: HasilBarProps) {
+  const hasUploads = selectedFile || selectedZip || similarItems.length > 0;
 
   return (
     <div className="fixed right-0 top-0 z-50 h-screen w-4/5 bg-transparent flex flex-col justify-start items-left">
         {!hasUploads && (
           <h2 className="text-center text-gray-600 mt-8 text-lg">Belum mengupload</h2>
         )}
-        {similarItemsState.length > 0 && (
+        {error && (
+          <p className="text-center text-red-600 mt-8 text-lg">{error}</p>
+        )}
+        {isLoading && (
+          <p className="text-center text-gray-600 mt-8 text-lg">Loading...</p>
+        )}
+        {similarItems.length > 0 && (
           <div className="mt-12">
             <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">
               Similar Items
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {similarItemsState.map((item, index) => (
+              {similarItems.map((item, index) => (
                 <div
                   key={index}
                   className="relative group bg-white rounded-lg overflow-hidden shadow-lg p-4"
@@ -112,12 +90,6 @@ export default function HasilBar({ selectedFile, selectedZip, similarItems }: Ha
               ))}
             </div>
           </div>
-        )}
-
-        {similarItemsState.length === 0 && !isLoading && (
-          <p className="text-center text-gray-600 mt-8 text-lg">
-            Tidak ada item mirip yang ditemukan.
-          </p>
         )}
     </div>
   );
