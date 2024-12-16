@@ -252,9 +252,9 @@ def handle_image_upload(uploaded_file):
     img_centered = img_array - data_mean
     img_pca = np.dot(img_centered, eigenvectors)
 
-    # Compute distances
-    distances = np.linalg.norm(database_features - img_pca, axis=1)
-    sorted_indices = np.argsort(distances)
+    # Compute similarities
+    similarities = np.dot(database_features, img_pca) / (np.linalg.norm(database_features, axis=1) * np.linalg.norm(img_pca) + 1e-9)
+    sorted_indices = np.argsort(similarities)[::-1]
 
     # Get top N similar images
     top_n = 5
@@ -265,7 +265,7 @@ def handle_image_upload(uploaded_file):
         similar_image = {
             "url": f"http://127.0.0.1:5000/images/{rel_path}".replace("\\", "/"),
             "label": image_label,
-            "distance": float(distances[idx])
+            "similarity": float(similarities[idx])
         }
         
         # Get associated MIDI from mapper
