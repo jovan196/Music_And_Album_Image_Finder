@@ -58,7 +58,7 @@ export default function HasilBar({
   return (
     <div className="fixed right-0 top-0 z-50 h-screen w-4/5 bg-transparent flex flex-col justify-start items-left overflow-y-auto">
       {!hasUploads && (
-        <h2 className="text-center text-white font-bold mt-8 text-lg" style={{ textShadow: '1px 1px 2px black' }}>Popmie Pencari Lagu dan Audio MIDI</h2>
+        <h2 className="text-center text-white font-bold mt-8 text-lg" style={{ textShadow: '1px 1px 2px black' }}>Popmie Pencari Gambar dan Audio MIDI</h2>
       )}
       {error && (
         <p className="text-center text-red-600 mt-8 text-lg">{error}</p>
@@ -152,7 +152,7 @@ export default function HasilBar({
       )}
       {validSimilarItems.length === 0 && !isLoading && hasUploads && (
         <p className="text-center text-white font-bold mt-8 text-lg" style={{ textShadow: '1px 1px 2px black' }}>
-          Popmie Pencari Lagu dan Audio MIDI
+          Popmie Pencari Gambar dan Audio MIDI
         </p>
       )}
     </div>
