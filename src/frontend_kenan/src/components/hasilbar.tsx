@@ -114,7 +114,7 @@ export default function HasilBar({
                     target="_blank"
                     rel="noopener noreferrer"
                     >
-                    Download Image
+                    Download MIDI
                     </a>
                   )}
                   </div>
