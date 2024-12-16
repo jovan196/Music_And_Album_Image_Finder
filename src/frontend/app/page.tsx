@@ -12,10 +12,13 @@ import axios from "axios";
 interface SimilarItem {
   url: string;
   label: string;
-  distance?: number;
   similarity?: number;
   associated_midi?: string;
   associated_image?: string;
+  title?: string;
+  artist?: string;
+  album?: string;
+  year?: string;
 }
 
 const PCA: React.FC = () => {
@@ -318,50 +321,61 @@ const PCA: React.FC = () => {
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {similarItems.map((item, index) => (
-                  <div
-                    key={index}
-                    className="relative group bg-white rounded-lg overflow-hidden shadow-lg p-4"
-                  >
-                    {item.url.endsWith('.mid') ? (
-                      <div className="flex items-center justify-center h-48 bg-gray-200">
-                        <p className="text-lg font-semibold text-gray-700">MIDI File</p>
-                      </div>
-                    ) : (
-                      <img
-                        src={item.url}
-                        alt={item.label}
-                        className="w-full h-48 object-cover"
-                      />
-                    )}
-                    <div className="mt-2">
-                      <p className="font-semibold">{item.label}</p>
+                    <div
+                      key={index}
+                      className="relative group bg-white rounded-lg overflow-hidden shadow-lg p-4"
+                    >
+                      {item.url.endsWith('.mid') ? (
+                        item.associated_image ? (
+                          <img
+                            src={item.associated_image}
+                            alt={item.label}
+                            className="w-full h-48 object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-48 flex items-center justify-center bg-gray-200">
+                            <p className="text-gray-700">File MIDI</p>
+                          </div>
+                        )
+                      ) : (
+                        <img
+                          src={item.url}
+                          alt={item.label}
+                          className="w-full h-48 object-cover"
+                        />
+                      )}
+                      <div className="mt-2">
+                        <p className="font-semibold">{item.title || item.label}</p>
+                        {item.artist && <p>Artist: {item.artist}</p>}
+                        {item.album && <p>Album: {item.album}</p>}
+                        {item.year && <p>Year: {item.year}</p>}
                         {item.similarity !== undefined && item.similarity >= 0 && item.similarity <= 1 && (
-                        <p>Similarity: {(item.similarity * 100).toFixed(2)}%</p>
+                          <p>Similarity: {(item.similarity * 100).toFixed(2)}%</p>
                         )}
-                      <div className="mt-2 space-x-2">
-                        {item.associated_midi && (
-                          <a
-                            href={item.associated_midi}
-                            className="text-blue-600 hover:underline"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            Download MIDI
-                          </a>
-                        )}
-                        {item.associated_image && (
-                          <a
-                            href={item.associated_image}
-                            className="text-blue-600 hover:underline"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            View Image
-                          </a>
-                        )}
+                        <div className="mt-2 space-x-2">
+                          {item.associated_midi && (
+                            <a
+                              href={item.associated_midi}
+                              className="text-blue-600 hover:underline"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              Download MIDI
+                            </a>
+                          )}
+                          {item.associated_image && (
+                            <a
+                              href={item.associated_image}
+                              className="text-blue-600 hover:underline"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              View Image
+                            </a>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
                 ))}
               </div>
             </div>

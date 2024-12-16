@@ -1,8 +1,44 @@
 {
-    "10.jpg": "x (1).mid",
-    "10000.jpg": "x (2).mid",
-    "10002.jpg": "x (3).mid",
-    "10003.jpg": "x (4).mid",
-    "10005.jpg": "x (5).mid",
-	"10011.jpg": "x (6).mid"
+  "10.jpg": {
+    "midi": "x (1).mid",
+    "title": "Song Title 1",
+    "artist": "Artist 1",
+    "album" : "Album 1",
+    "year": "2020"
+  },
+  "10000.jpg": {
+    "midi": "x (2).mid",
+    "title": "Song Title 2",
+    "artist": "Artist 2",
+    "album" : "Album 2",
+    "year": "2019"
+  },
+  "10002.jpg": {
+    "midi": "x (3).mid",
+    "title": "Song Title 3",
+    "artist": "Artist 3",
+    "album" : "Album 3",
+    "year": "2018"
+  },
+  "10003.jpg": {
+    "midi": "x (4).mid",
+    "title": "Song Title 4",
+    "artist": "Artist 4",
+    "album" : "Album 4",
+    "year": "2017"
+  },
+  "10005.jpg": {
+    "midi": "x (5).mid",
+    "title": "Song Title 5",
+    "artist": "Artist 5",
+    "album" : "Album 5",
+    "year": "2016"
+  },
+  "10011.jpg": {
+    "midi": "x (6).mid",
+    "title": "Song Title 6",
+    "artist": "Artist 6",
+    "album" : "Album 6",
+    "year": "2015"
+  }
 }

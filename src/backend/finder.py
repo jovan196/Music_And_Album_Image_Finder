@@ -286,11 +286,15 @@ def handle_image_upload(uploaded_file):
             "label": image_label,
             "similarity": float(similarities[idx])
         }
-        
-        # Get associated MIDI from mapper
-        associated_midi_name = mapper.get(image_label)
-        if associated_midi_name:
-            similar_image["associated_midi"] = f"http://127.0.0.1:5000/midi/{associated_midi_name}"
+
+        # Get associated song details from mapper
+        song_info = mapper.get(image_label)
+        if song_info:
+            similar_image["associated_midi"] = f"http://127.0.0.1:5000/midi/{song_info['midi']}"
+            similar_image["title"] = song_info.get("title", "")
+            similar_image["artist"] = song_info.get("artist", "")
+            similar_image["album"] = song_info.get("album", "")
+            similar_image["year"] = song_info.get("year", "")
         similar_images.append(similar_image)
 
     return jsonify({
@@ -346,14 +350,15 @@ def handle_midi_upload(uploaded_file):
             "similarity": result['similarity'],
             "url": f"http://127.0.0.1:5000/midi/{midi_file_name}"
         }
-        # Get associated image from mapper
-        associated_image_name = None
-        for image_name, midi_name in mapper.items():
-            if midi_name == midi_file_name:
-                associated_image_name = image_name
+        # Get associated image and song details from mapper
+        for image_name, song_info in mapper.items():
+            if song_info['midi'] == midi_file_name:
+                midi_info["associated_image"] = f"http://127.0.0.1:5000/images/{image_name}"
+                midi_info["title"] = song_info.get("title", "")
+                midi_info["artist"] = song_info.get("artist", "")
+                midi_info["album"] = song_info.get("album", "")
+                midi_info["year"] = song_info.get("year", "")
                 break
-        if associated_image_name:
-            midi_info["associated_image"] = f"http://127.0.0.1:5000/images/{associated_image_name}"
 
         similar_midis.append(midi_info)
 
