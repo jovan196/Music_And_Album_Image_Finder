@@ -27,6 +27,8 @@ NUM_PCA_COMPONENTS = 100
 WINDOW_SIZE = 40
 SLIDE_SIZE = 6
 
+TOP_N = 12
+
 # Ensure directories exist
 for path in [DATABASE_PATH_IMAGES, DATABASE_PATH_MIDI, PROCESSED_DATA_PATH, UPLOADS_PATH, MAPPER_PATH, PROCESSED_DATA_PATH_IMAGES, PROCESSED_DATA_PATH_MIDI]:
     if not os.path.exists(path):
@@ -83,6 +85,11 @@ def update_image_database():
 
     logging.info("Preprocessing images and computing PCA...")
     database_images, database_labels, database_paths = preprocess_images_from_directory(DATABASE_PATH_IMAGES)
+    
+    if database_images.size == 0:
+        logging.warning("No images found in the database.")
+        return
+    
     database_features, data_mean, eigenvectors = compute_pca(database_images, NUM_PCA_COMPONENTS)
     np.savez_compressed(
         f"{PROCESSED_DATA_PATH_IMAGES}/database_pca.npz",
@@ -183,6 +190,10 @@ def update_midi_database():
 
     logging.info("Preprocessing MIDI dataset...")
     processed_midi_dataset, midi_dataset_labels = preprocess_midi_dataset(DATABASE_PATH_MIDI)
+    
+    if len(processed_midi_dataset) == 0:
+        logging.warning("No MIDI files found in the database.")
+        return
 
 # Initialize databases
 def initialize_databases():
@@ -202,7 +213,7 @@ def initialize_databases():
     else:
         logging.info("No preprocessed PCA data found. Preprocessing image data...")
         update_image_database()
-        if database_features.size == 0:
+        if database_features is None or database_features.size == 0:
             logging.warning("Image database is empty after preprocessing.")
 
     # Load or preprocess MIDI data
@@ -214,7 +225,7 @@ def initialize_databases():
     else:
         logging.info("No processed MIDI data found. Preprocessing MIDI data...")
         update_midi_database()
-        if not processed_midi_dataset:
+        if processed_midi_dataset is None or len(processed_midi_dataset) == 0:
             logging.warning("MIDI database is empty after preprocessing.")
 
     # Load mapper
@@ -249,7 +260,7 @@ def upload_mapper():
 
 def handle_image_upload(uploaded_file):
     global mapper
-    if database_features.size == 0:
+    if database_features is None or database_features.size == 0:
         return jsonify({"similar_items": [], "message": "Image database is empty."})
 
     img_path = os.path.join(UPLOADS_PATH, uploaded_file.filename)
@@ -266,9 +277,8 @@ def handle_image_upload(uploaded_file):
     sorted_indices = np.argsort(similarities)[::-1]
 
     # Get top N similar images
-    top_n = 5
     similar_images = []
-    for idx in sorted_indices[:top_n]:
+    for idx in sorted_indices[:TOP_N]:
         rel_path = os.path.relpath(database_paths[idx], DATABASE_PATH_IMAGES)
         image_label = database_labels[idx]
         similar_image = {
@@ -302,7 +312,7 @@ def handle_image_zip_upload(uploaded_file):
 
 def handle_midi_upload(uploaded_file):
     global mapper
-    if not processed_midi_dataset:
+    if processed_midi_dataset is None or len(processed_midi_dataset) == 0:
         return jsonify({"similar_items": [], "message": "MIDI database is empty."})
 
     midi_path = os.path.join(UPLOADS_PATH, uploaded_file.filename)
@@ -327,7 +337,7 @@ def handle_midi_upload(uploaded_file):
 
     # Prepare response
     similar_midis = []
-    for result in results[:5]:  # Get top 5 results
+    for result in results[:TOP_N]:  # Get top 5 results
         idx = result['index']
         midi_label = midi_dataset_labels[idx]
         midi_file_name = midi_label + '.mid'

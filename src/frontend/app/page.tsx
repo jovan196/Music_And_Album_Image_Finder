@@ -335,9 +335,9 @@ const PCA: React.FC = () => {
                     )}
                     <div className="mt-2">
                       <p className="font-semibold">{item.label}</p>
-                      {item.similarity !== undefined && (
+                        {item.similarity !== undefined && item.similarity >= 0 && item.similarity <= 1 && (
                         <p>Similarity: {(item.similarity * 100).toFixed(2)}%</p>
-                      )}
+                        )}
                       <div className="mt-2 space-x-2">
                         {item.associated_midi && (
                           <a
