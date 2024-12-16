@@ -186,7 +186,7 @@ export default function SideBar({
     <div className="flex">
       <nav className="fixed left-0 top-0 z-50 h-screen w-[300px] bg-black bg-opacity-100 flex flex-col overflow-hidden">
         {/* Logo/Header - stays fixed */}
-        <div className="flex-shrink-0 p-4">
+        <div className="flex-shrink-0 p-4 flex justify-center">
           <h1 className="text-white text-4xl font-[family-name:var(--font-futura)] flex items-center">
             <img src="/SkyGliders3.jpg" alt="Logo" width={200} height={50} className="mr-2" />
           </h1>
