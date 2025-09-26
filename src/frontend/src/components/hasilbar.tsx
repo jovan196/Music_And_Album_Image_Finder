@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { useState } from "react";
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Update the SimilarItem interface to match the backend response
 interface SimilarItem {
@@ -35,6 +34,10 @@ export default function HasilBar({
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [similarItems]);
+
   // Filter valid items with similarity between 0 and 1 (0-100%)
   const validSimilarItems = similarItems.filter(
     item => item.similarity !== undefined && 
@@ -56,26 +59,28 @@ export default function HasilBar({
   };
 
   return (
-    <div className="fixed right-0 top-0 z-50 h-screen w-4/5 bg-transparent flex flex-col justify-start items-left overflow-y-auto">
+  <div className="flex w-full flex-col items-stretch justify-start bg-transparent px-4 py-6 md:max-h-screen md:overflow-y-auto md:px-8">
       {!hasUploads && (
-        <h2 className="text-center text-white font-bold mt-8 text-lg" style={{ textShadow: '1px 1px 2px black' }}>Popmie Pencari Gambar dan Audio MIDI</h2>
+        <h2 className="mt-6 text-center text-lg font-bold text-white" style={{ textShadow: '1px 1px 2px black' }}>
+          Popmie Pencari Gambar dan Audio MIDI
+        </h2>
       )}
       {error && (
-        <p className="text-center text-red-600 mt-8 text-lg">{error}</p>
+        <p className="mt-6 text-center text-lg text-red-600">{error}</p>
       )}
       {isLoading && (
-        <p className="text-center text-gray-600 mt-8 text-lg">Loading...</p>
+        <p className="mt-6 text-center text-lg text-gray-200">Loading...</p>
       )}
       {paginatedItems.length > 0 && (
-        <div className="mt-12 px-6">
-          <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">
+        <div className="mt-6 w-full">
+          <h2 className="mb-6 text-center text-3xl font-bold text-white">
             Similar Items ({validSimilarItems.length})
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {paginatedItems.map((item, index) => (
               <div
                 key={index}
-                className="relative group bg-white rounded-lg overflow-hidden shadow-lg p-3 hover:shadow-xl transition-shadow duration-300"
+                className="group relative overflow-hidden rounded-lg bg-white p-3 shadow-lg transition-shadow duration-300 hover:shadow-xl"
               >
                 {item.url.endsWith('.mid') ? (
                   item.associated_image ? (
@@ -135,7 +140,7 @@ export default function HasilBar({
               </div>
             ))}
           </div>
-          <div className="flex justify-center mt-6">
+          <div className="mt-6 flex justify-center">
             {Array.from({ length: totalPages }, (_, index) => (
               <button
                 key={index}
@@ -151,7 +156,7 @@ export default function HasilBar({
         </div>
       )}
       {validSimilarItems.length === 0 && !isLoading && hasUploads && (
-        <p className="text-center text-white font-bold mt-8 text-lg" style={{ textShadow: '1px 1px 2px black' }}>
+        <p className="mt-6 text-center text-lg font-bold text-white" style={{ textShadow: '1px 1px 2px black' }}>
           Popmie Pencari Gambar dan Audio MIDI
         </p>
       )}

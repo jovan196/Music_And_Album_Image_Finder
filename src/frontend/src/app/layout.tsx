@@ -88,7 +88,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} ${futura.variable} ${archivoblack.variable} ${livvic.variable} ${livvicreg.variable} antialiased`}>
-        <div className="flex">
+        <div className="flex min-h-screen flex-col md:flex-row">
           <SideBar
             onFileSelect={setSelectedFile}
             onZipSelect={setSelectedZip}
@@ -101,15 +101,21 @@ export default function RootLayout({
             uploadedFileUrl={uploadedFileUrl}
             setUploadedFileUrl={setUploadedFileUrl}
           />
-          <HasilBar
-        selectedFile={selectedFile}
-        selectedZip={selectedZip}
-        similarItems={similarItems}
-        isLoading={isLoading}
-        error={error}
-      />
-          <Page />
-          <main>{children}</main>
+          <div className="relative flex-1">
+            <div className="absolute inset-0 -z-10">
+              <Page />
+            </div>
+            <div className="relative flex min-h-screen flex-col">
+              <HasilBar
+                selectedFile={selectedFile}
+                selectedZip={selectedZip}
+                similarItems={similarItems}
+                isLoading={isLoading}
+                error={error}
+              />
+              <main className="flex-1">{children}</main>
+            </div>
+          </div>
         </div>
       </body>
     </html>

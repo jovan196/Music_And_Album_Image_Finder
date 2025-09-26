@@ -49,6 +49,15 @@ def delete_files_in_directory(directory):
         if os.path.isfile(file_path):
             os.remove(file_path)
 
+# Deletes all files in uploads directory after query processing
+# Except .gitkeep
+def reset_uploads():
+    for f in os.listdir(UPLOADS_PATH):
+        if f != ".gitkeep":
+            os.remove(os.path.join(UPLOADS_PATH, f))
+
+
+
 # Load or update mapper
 def load_mapper():
     global mapper
@@ -301,6 +310,8 @@ def handle_image_upload(uploaded_file):
             similar_image["year"] = song_info.get("year", "")
         similar_images.append(similar_image)
 
+    reset_uploads()  # Clean up uploads after processing
+
     return jsonify({
         "similar_items": similar_images
     })
@@ -316,6 +327,8 @@ def handle_image_zip_upload(uploaded_file):
 
     # Update image database
     update_image_database()
+
+    reset_uploads()  # Clean up uploads after processing
 
     return jsonify({"message": "Image ZIP uploaded and database updated successfully"})
 
@@ -366,6 +379,7 @@ def handle_midi_upload(uploaded_file):
                 break
 
         similar_midis.append(midi_info)
+    reset_uploads()  # Clean up uploads after processing
 
     return jsonify({
         "similar_items": similar_midis
@@ -382,6 +396,7 @@ def handle_midi_zip_upload(uploaded_file):
 
     # Update MIDI database
     update_midi_database()
+    reset_uploads()  # Clean up uploads after processing
 
     return jsonify({"message": "MIDI ZIP uploaded and database updated successfully"})
 
