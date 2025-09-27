@@ -46,7 +46,7 @@ async function proxyToBackend(request: NextRequest, slug: string[], method: stri
     }
 
     return NextResponse.json(response.data, { status: response.status });
-  } catch (error: any) {
+  } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
       // langsung forward payload asli Flask
       return NextResponse.json(error.response.data, {
