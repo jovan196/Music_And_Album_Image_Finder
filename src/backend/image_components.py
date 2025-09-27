@@ -116,14 +116,14 @@ def handle_image_upload(uploaded_file, mapper: dict, flask_request: Request):
         rel_path = os.path.relpath(database_paths[idx], DATABASE_PATH_IMAGES)
         image_label = database_labels[idx]
         similar_image = {
-            "url": f"{flask_request.host_url}images/{rel_path}".replace("\\", "/"),
+            "url": f"{flask_request.host_url}finder/images/{rel_path}".replace("\\", "/"),
             "label": image_label,
             "similarity": float(similarities[idx]),
         }
 
         song_info = mapper.get(image_label)
         if song_info:
-            similar_image["associated_midi"] = f"{flask_request.host_url}midi/{song_info['midi']}"
+            similar_image["associated_midi"] = f"{flask_request.host_url}finder/midi/{song_info['midi']}"
             similar_image["title"] = song_info.get("title", "")
             similar_image["artist"] = song_info.get("artist", "")
             similar_image["album"] = song_info.get("album", "")

@@ -34,7 +34,7 @@ initialize_image_components()
 initialize_midi_components()
 
 
-@app.route("/upload", methods=["POST"])
+@app.route("/finder/upload", methods=["POST"])
 def upload_image():
     uploaded_file = request.files.get("file")
     if not uploaded_file:
@@ -43,7 +43,7 @@ def upload_image():
     return handle_image_upload(uploaded_file, mapper, request)
 
 
-@app.route("/upload-zip", methods=["POST"])
+@app.route("/finder/upload-zip", methods=["POST"])
 def upload_image_zip():
     uploaded_file = request.files.get("file")
     if not uploaded_file:
@@ -52,7 +52,7 @@ def upload_image_zip():
     return handle_image_zip_upload(uploaded_file)
 
 
-@app.route("/upload-mid", methods=["POST"])
+@app.route("/finder/upload-mid", methods=["POST"])
 def upload_midi():
     uploaded_file = request.files.get("file")
     if not uploaded_file:
@@ -61,7 +61,7 @@ def upload_midi():
     return handle_midi_upload(uploaded_file, mapper, request)
 
 
-@app.route("/upload-mid-zip", methods=["POST"])
+@app.route("/finder/upload-mid-zip", methods=["POST"])
 def upload_midi_zip():
     uploaded_file = request.files.get("file")
     if not uploaded_file:
@@ -70,7 +70,7 @@ def upload_midi_zip():
     return handle_midi_zip_upload(uploaded_file)
 
 
-@app.route("/upload-mapper", methods=["POST"])
+@app.route("/finder/upload-mapper", methods=["POST"])
 def upload_mapper():
     global mapper
 
@@ -86,12 +86,12 @@ def upload_mapper():
     return jsonify({"message": "Mapper uploaded successfully."})
 
 
-@app.route("/images/<path:filename>")
+@app.route("/finder/images/<path:filename>")
 def serve_image(filename):
     return send_from_directory(DATABASE_PATH_IMAGES, filename)
 
 
-@app.route("/midi/<path:filename>")
+@app.route("/finder/midi/<path:filename>")
 def serve_midi(filename):
     return send_from_directory(DATABASE_PATH_MIDI, filename)
 

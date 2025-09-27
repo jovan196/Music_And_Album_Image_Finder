@@ -197,11 +197,11 @@ def handle_midi_upload(uploaded_file, mapper: dict, flask_request: Request, thre
         midi_info = {
             "label": midi_label,
             "similarity": result["similarity"],
-            "url": f"{flask_request.host_url}midi/{midi_file_name}",
+            "url": f"{flask_request.host_url}finder/midi/{midi_file_name}",
         }
         for image_name, song_info in mapper.items():
             if song_info.get("midi") == midi_file_name:
-                midi_info["associated_image"] = f"{flask_request.host_url}images/{image_name}"
+                midi_info["associated_image"] = f"{flask_request.host_url}finder/images/{image_name}"
                 midi_info["title"] = song_info.get("title", "")
                 midi_info["artist"] = song_info.get("artist", "")
                 midi_info["album"] = song_info.get("album", "")
