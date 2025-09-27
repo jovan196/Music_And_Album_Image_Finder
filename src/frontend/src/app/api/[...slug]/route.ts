@@ -9,7 +9,7 @@ async function proxyToBackend(request: NextRequest, slug: string[], method: stri
     backendUrl = backendUrl.replace(/\/+$/, ""); // hapus trailing slash
 
     const endpoint = slug.join("/");
-    const pythonBackendUrl = `${backendUrl}/${endpoint}`;
+    const pythonBackendUrl = `${backendUrl}/finder/${endpoint}`;
 
     let response;
 
