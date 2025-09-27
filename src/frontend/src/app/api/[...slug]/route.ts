@@ -46,10 +46,11 @@ async function proxyToBackend(request: NextRequest, slug: string[], method: stri
     }
 
     return NextResponse.json(response.data, { status: response.status });
-  } catch (error: any) {
-    console.error("Bridge error:", error.message);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error("Bridge error:", message);
     return NextResponse.json(
-      { error: "Bridge error", detail: error.message },
+      { error: "Bridge error", detail: message },
       { status: 500 }
     );
   }
