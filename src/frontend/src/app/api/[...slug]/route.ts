@@ -5,7 +5,7 @@ import FormData from "form-data";
 // proxy function
 async function proxyToBackend(request: NextRequest, slug: string[], method: string) {
   try {
-    let backendUrl = process.env.PYTHON_BACKEND_URL || "http://backend:8000";
+    let backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://backend:8000";
     backendUrl = backendUrl.replace(/\/+$/, ""); // hapus trailing slash
 
     const endpoint = slug.join("/");
