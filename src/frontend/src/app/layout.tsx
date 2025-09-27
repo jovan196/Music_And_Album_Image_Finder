@@ -75,7 +75,7 @@ export default function RootLayout({
 
     try {
       setIsLoading(true);
-      const response = await axios.post(`/api/upload?endpoint=${endpoint}`, formData);
+      const response = await axios.post(`/api/${endpoint}`, formData);
       setSimilarItems(response.data.similar_items || []);
     } catch (err) {
       console.error("Error uploading file:", err);
