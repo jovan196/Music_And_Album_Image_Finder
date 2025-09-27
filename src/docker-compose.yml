@@ -3,7 +3,7 @@ services:
     build: ./backend
     container_name: flask_backend
     environment:
-      - ALLOW_DB_UPDATE=true
+      - ALLOW_DB_UPDATE=false
     restart: always
     expose:
       - "8000"
