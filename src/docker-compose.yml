@@ -10,7 +10,7 @@ services:
     build: 
       context: ./frontend
       args:
-        - NEXT_PUBLIC_API_URL=https://sea-catering.space
+        - NEXT_PUBLIC_API_URL=https://202-155-94-162.nevacloud.io
     container_name: next_frontend
     restart: always
     expose:
