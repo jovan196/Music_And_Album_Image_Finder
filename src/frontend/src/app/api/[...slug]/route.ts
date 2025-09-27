@@ -46,14 +46,21 @@ async function proxyToBackend(request: NextRequest, slug: string[], method: stri
     }
 
     return NextResponse.json(response.data, { status: response.status });
-  } catch (error) {
+  } catch (error: any) {
+    if (axios.isAxiosError(error) && error.response) {
+      // langsung forward payload asli Flask
+      return NextResponse.json(error.response.data, {
+        status: error.response.status,
+      });
+    }
+
+    // fallback kalau error di sisi bridge
     const message = error instanceof Error ? error.message : String(error);
-    console.error("Bridge error:", message);
     return NextResponse.json(
-      { error: "Bridge error", detail: message },
+      { message: "Bridge internal error", detail: message },
       { status: 500 }
     );
-  }
+}
 }
 
 // ✅ Perhatikan: params sekarang diperlakukan async

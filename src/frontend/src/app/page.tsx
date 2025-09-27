@@ -40,7 +40,13 @@ export default function Page() {
       setSimilarItems(response.data.similar_items || []);
     } catch (err) {
       console.error("Error uploading file:", err);
-      setError(err instanceof Error ? err.message : "Error uploading file");
+      if (axios.isAxiosError(err) && err.response) {
+        const data = err.response.data as { message: string};
+        setError(data.message || "Error uploading file");
+      }
+      else {
+        setError(err instanceof Error ? err.message : "Error uploading file");
+      }
     } finally {
       setIsLoading(false);
     }

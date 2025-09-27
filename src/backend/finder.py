@@ -28,6 +28,8 @@ logging.basicConfig(level=logging.INFO)
 app = Flask(__name__)
 CORS(app)
 
+ALLOW_DB_UPDATE = os.getenv("ALLOW_DB_UPDATE", "false").lower() in ("true", "1", "yes")
+
 ensure_directories()
 mapper = load_mapper()
 initialize_image_components()
@@ -38,16 +40,18 @@ initialize_midi_components()
 def upload_image():
     uploaded_file = request.files.get("file")
     if not uploaded_file:
-        return jsonify({"error": "No file uploaded"}), 400
+        return jsonify({"message": "No file uploaded"}), 400
 
     return handle_image_upload(uploaded_file, mapper, request)
 
 
 @app.route("/finder/upload-zip", methods=["POST"])
 def upload_image_zip():
+    if not ALLOW_DB_UPDATE:
+        return jsonify({"message": "Image database updates are disabled."}), 403
     uploaded_file = request.files.get("file")
     if not uploaded_file:
-        return jsonify({"error": "No file uploaded"}), 400
+        return jsonify({"message": "No file uploaded"}), 400
 
     return handle_image_zip_upload(uploaded_file)
 
@@ -56,16 +60,18 @@ def upload_image_zip():
 def upload_midi():
     uploaded_file = request.files.get("file")
     if not uploaded_file:
-        return jsonify({"error": "No file uploaded"}), 400
+        return jsonify({"message": "No file uploaded"}), 400
 
     return handle_midi_upload(uploaded_file, mapper, request)
 
 
 @app.route("/finder/upload-mid-zip", methods=["POST"])
 def upload_midi_zip():
+    if not ALLOW_DB_UPDATE:
+        return jsonify({"message": "MIDI database updates are disabled."}), 403
     uploaded_file = request.files.get("file")
     if not uploaded_file:
-        return jsonify({"error": "No file uploaded"}), 400
+        return jsonify({"message": "No file uploaded"}), 400
 
     return handle_midi_zip_upload(uploaded_file)
 
@@ -74,9 +80,12 @@ def upload_midi_zip():
 def upload_mapper():
     global mapper
 
+    if not ALLOW_DB_UPDATE:
+        return jsonify({"message": "Mapper updates are disabled."}), 403
+
     uploaded_file = request.files.get("file")
     if not uploaded_file:
-        return jsonify({"error": "No mapper file uploaded"}), 400
+        return jsonify({"message": "No mapper file uploaded"}), 400
 
     delete_files_in_directory(MAPPER_PATH)
     mapper_path = os.path.join(MAPPER_PATH, "mapper.json")

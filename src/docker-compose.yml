@@ -2,6 +2,8 @@ services:
   backend:
     build: ./backend
     container_name: flask_backend
+    environment:
+      - ALLOW_DB_UPDATE=true
     restart: always
     expose:
       - "8000"

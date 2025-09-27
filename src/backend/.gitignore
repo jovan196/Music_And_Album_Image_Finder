@@ -4,3 +4,6 @@ venv/*
 
 # Allow the folder itself (to ensure it stays tracked)
 !uploads/.gitkeep
+
+# Ignore environment variable file
+.env

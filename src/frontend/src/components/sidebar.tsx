@@ -114,7 +114,7 @@ export default function SideBar({
       try {
         const formData = new FormData();
         formData.append('file', selectedZip);
-        await axios.post('/api/upload?endpoint=upload-zip', formData);
+        await axios.post('/api/upload-zip', formData);
         alert('Image database updated successfully!');
       } catch (error) {
         console.error("Error uploading ZIP:", error);
@@ -134,7 +134,7 @@ export default function SideBar({
       try {
         const formData = new FormData();
         formData.append('file', selectedMidiZip);
-        await axios.post('/api/upload?endpoint=upload-mid-zip', formData);
+        await axios.post('/api/upload-mid-zip', formData);
         alert('MIDI database updated successfully!');
       } catch (error) {
         console.error("Error uploading MIDI ZIP:", error);
@@ -154,7 +154,7 @@ export default function SideBar({
       try {
         const formData = new FormData();
         formData.append('file', selectedMapper);
-        await axios.post('/api/upload?endpoint=upload-mapper', formData);
+        await axios.post('/api/upload-mapper', formData);
         alert('Mapper updated successfully!');
       } catch (error) {
         console.error("Error uploading mapper:", error);
@@ -195,7 +195,7 @@ export default function SideBar({
                 htmlFor="file-upload"
                 className="mt-2 block text-center text-xs font-extrabold text-gray-300"
               >
-                {selectedFile ? selectedFile.name : "Upload Picture"}
+                {selectedFile ? selectedFile.name : "Upload Album Picture"}
               </label>
               <div className="relative">
                 <input
@@ -227,7 +227,7 @@ export default function SideBar({
                 htmlFor="midi-upload"
                 className="block text-center text-xs font-extrabold text-gray-300"
               >
-                {selectedMidi ? selectedMidi.name : "Unggah File Audio"}
+                {selectedMidi ? selectedMidi.name : "Unggah File Audio MIDI"}
               </label>
               <div className="relative">
                 <input
@@ -237,7 +237,7 @@ export default function SideBar({
                   className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
                 />
                 <div className="mt-1 block w-full rounded-full border border-white bg-black py-1 px-2 text-center text-xs font-bold text-white">
-                  Upload Audio
+                  Upload MIDI
                 </div>
               </div>
               <button
@@ -259,7 +259,7 @@ export default function SideBar({
                 htmlFor="zip-upload"
                 className="block text-center text-xs font-extrabold text-white"
               >
-                {selectedZip ? selectedZip.name : "Upload Image Database"}
+                {selectedZip ? selectedZip.name : "Upload Album Image Database"}
               </label>
               <div className="relative">
                 <input
@@ -292,7 +292,7 @@ export default function SideBar({
                 htmlFor="midi-zip-upload"
                 className="block text-center text-xs font-extrabold text-white"
               >
-                {selectedMidiZip ? selectedMidiZip.name : "Upload Audio Database"}
+                {selectedMidiZip ? selectedMidiZip.name : "Upload MIDI Audio Database"}
               </label>
               <div className="relative">
                 <input
@@ -315,7 +315,7 @@ export default function SideBar({
                     : "bg-purple-950 hover:scale-105 hover:bg-purple-900"
                 }`}
               >
-                {isLoadingState ? "Uploading..." : "Update Audio Database"}
+                {isLoadingState ? "Uploading..." : "Update MIDI Database"}
               </button>
             </div>
 
