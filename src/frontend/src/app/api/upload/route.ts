@@ -1,68 +1,46 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { NextRequest, NextResponse } from 'next/server';
-import multer from 'multer';
 import axios from 'axios';
-import fs from 'fs';
 import FormData from 'form-data';
-import { promisify } from 'util';
-
-// Configure multer
-const storage = multer.diskStorage({
-  destination: './uploads',
-  filename: (req, file, cb) => {
-    cb(null, file.originalname);
-  },
-});
-
-const upload = multer({ storage });
-const uploadMiddleware = promisify(upload.single('file'));
 
 export async function POST(request: NextRequest) {
   try {
-    // Get the FormData from the request
+    // Ambil form-data dari request
     const formData = await request.formData();
     const file = formData.get('file') as File;
-    const endpoint = new URL(request.url).searchParams.get('endpoint') || 'upload';
-    
     if (!file) {
-      throw new Error('No file uploaded');
+      return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
     }
-    
-    // Save file temporarily
+
+    // Tentukan endpoint ke Python backend
+    const endpoint = new URL(request.url).searchParams.get('endpoint') || 'upload';
+    let backendUrl = process.env.PYTHON_BACKEND_URL || 'http://backend:8000';
+    backendUrl = backendUrl.replace(/\/+$/, ''); // remove trailing slash
+    const pythonBackendUrl = `${backendUrl}/${endpoint}`;
+
+    // Convert File ke Buffer
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
-    const filePath = `./uploads/${file.name}`;
-    
-    // Ensure uploads directory exists
-    if (!fs.existsSync('./uploads')) {
-      fs.mkdirSync('./uploads', { recursive: true });
-    }
-    
-    // Write file
-    fs.writeFileSync(filePath, buffer);
 
-    // Create form data for Python backend
+    // Buat form-data untuk dikirim ke Flask
     const pythonFormData = new FormData();
-    pythonFormData.append('file', fs.createReadStream(filePath));
+    pythonFormData.append('file', buffer, file.name);
 
-    // Send to Python backend
-    const pythonBackendUrl = `http://127.0.0.1:5000/${endpoint}`;
+    // Request ke Python backend
     const response = await axios.post(pythonBackendUrl, pythonFormData, {
       headers: {
         ...pythonFormData.getHeaders(),
       },
+      maxBodyLength: Infinity, // supaya aman untuk file besar
     });
 
-    // Clean up
-    fs.unlinkSync(filePath);
-
-    // Return response
     return NextResponse.json(response.data);
   } catch (error) {
-    console.error('Error processing upload:', error);
+    const message = error instanceof Error ? error.message : String(error);
+    console.error('Error processing upload:', message, error);
     return NextResponse.json(
-      { error: 'Error processing upload' },
+      { error: 'Error processing upload', detail: message },
       { status: 500 }
     );
   }
