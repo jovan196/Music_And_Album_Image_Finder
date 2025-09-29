@@ -30,6 +30,14 @@ export default function Page() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  const changeIfBackend = (url: string) => {
+    if (url.startsWith('http://backend:8000')) {
+      return url.replace('http://backend:8000', process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000');
+    }
+    return url;
+  };
+
+
   const handleUpload = async (file: File, endpoint: string) => {
     const formData = new FormData();
     formData.append("file", file);
@@ -37,6 +45,17 @@ export default function Page() {
     try {
       setIsLoading(true);
       const response = await axios.post(`/api/${endpoint}`, formData);
+      for (const item of response.data.similar_items || []) {
+        if (item.associated_image) {
+          item.associated_image = changeIfBackend(item.associated_image);
+        }
+        if (item.associated_midi) {
+          item.associated_midi = changeIfBackend(item.associated_midi);
+        }
+        if (item.url) {
+          item.url = changeIfBackend(item.url);
+        }
+      }
       setSimilarItems(response.data.similar_items || []);
     } catch (err) {
       console.error("Error uploading file:", err);
