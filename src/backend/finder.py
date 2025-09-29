@@ -95,14 +95,26 @@ def upload_mapper():
     return jsonify({"message": "Mapper uploaded successfully."})
 
 
-@app.route("/finder/images/<path:filename>")
+@app.route("/finder/images/<path:filename>", methods=["GET"])
 def serve_image(filename):
     return send_from_directory(DATABASE_PATH_IMAGES, filename)
 
 
-@app.route("/finder/midi/<path:filename>")
+@app.route("/finder/midi/<path:filename>", methods=["GET"])
 def serve_midi(filename):
     return send_from_directory(DATABASE_PATH_MIDI, filename)
+
+@app.route("/")
+def index():
+    return jsonify({"message": "Welcome to the Music and Album Image Finder API"}), 200
+
+# 404 handler
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({"message": "Page not found"}), 404
+
+
+
 
 
 if __name__ == "__main__":

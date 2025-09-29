@@ -17,7 +17,8 @@ async function proxyToBackend(request: NextRequest, slug: string[], method: stri
       response = await axios.get(pythonBackendUrl, {
         params: Object.fromEntries(new URL(request.url).searchParams),
       });
-    } else {
+    } 
+    else if (method === "POST") {
       const contentType = request.headers.get("content-type") || "";
 
       if (contentType.includes("multipart/form-data")) {
@@ -43,6 +44,9 @@ async function proxyToBackend(request: NextRequest, slug: string[], method: stri
           headers: { "Content-Type": "application/json" },
         });
       }
+    }
+    else {
+      return NextResponse.json({ message: "Method not allowed" }, { status: 405 });
     }
 
     return NextResponse.json(response.data, { status: response.status });
