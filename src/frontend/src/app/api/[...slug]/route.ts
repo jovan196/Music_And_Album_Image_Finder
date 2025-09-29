@@ -63,7 +63,6 @@ async function proxyToBackend(request: NextRequest, slug: string[], method: stri
 }
 }
 
-// ✅ Perhatikan: params sekarang diperlakukan async
 export async function POST(request: NextRequest, context: { params: Promise<{ slug: string[] }> }) {
   const { slug } = await context.params;
   return proxyToBackend(request, slug, "POST");
